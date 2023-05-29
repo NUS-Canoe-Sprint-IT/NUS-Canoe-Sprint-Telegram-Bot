@@ -7,13 +7,9 @@ import {greet} from './Commands/greetings'
 
 require('dotenv').config();
 
-/*Comment out the respective line when switching to production or testing mode*/
-
-// Test
-const bot: Telegraf<Context<Update>> = new Telegraf(process.env.TEST_BOT_TOKEN as string);
-
-// Prod
-// const bot: Telegraf<Context<Update>> = new Telegraf(process.env.PROD_BOT_TOKEN as string);
+const environment: string = process.env.ENVIRONMENT as string;
+const APIToken: string = (environment == 'prod' ? process.env.PROD_BOT_TOKEN : process.env.TEST_BOT_TOKEN) as string
+const bot: Telegraf<Context<Update>> = new Telegraf(APIToken);
 
 bot.start((ctx) => {ctx.reply(greet(ctx.from.first_name));});
 
