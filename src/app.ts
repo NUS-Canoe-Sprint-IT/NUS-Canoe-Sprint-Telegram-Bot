@@ -3,7 +3,8 @@ import {botRequest} from 'telegraf/typings/button';
 import {Update} from 'typegram';
 import * as dotenv from "dotenv";
 
-import {greet} from './Commands/greetings'
+import {greet} from './Commands/greetings';
+//import {helpMessage} from './Constants';
 
 require('dotenv').config();
 
@@ -12,5 +13,6 @@ const APIToken: string = (environment == 'prod' ? process.env.PROD_BOT_TOKEN : p
 const bot: Telegraf<Context<Update>> = new Telegraf(APIToken);
 
 bot.start((ctx) => {ctx.reply(greet(ctx.from.first_name));});
+//bot.help((ctx) => {ctx.reply(helpMessage)})
 
 bot.launch();
