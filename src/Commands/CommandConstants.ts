@@ -1,4 +1,4 @@
 export const HELP_MESSAGE = (
-    "/help  - display this message\n" +
-    "/start - start this bot\n"
+    "/help  - Display this message\n" +
+    "/start - Start this bot\n"
 )
