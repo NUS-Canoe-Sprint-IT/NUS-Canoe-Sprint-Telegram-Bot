@@ -1,5 +1,5 @@
 import { start } from "repl";
-import {getFirstDateOfWeek, getLastDateOfWeek, getWeekToString} from "../src/Utils/dateUtils"
+import {getFirstDateOfWeek, getLastDateOfWeek, getWeekToString, getWeekFromDate, dateToString} from "../src/Utils/dateUtils"
 
 describe( "Method - getFirstDateOfWeek()", () => {
     test ("Test 1 - date falls on Sunday", () =>{
@@ -84,6 +84,52 @@ describe( "Method - getWeekToString", () => {
         const endDate: Date = new Date("2023-04-02"); 
         const expected: string = "Mar 27/03 - Apr 02/04";
         const actual: string = getWeekToString(startDate, endDate);
+        expect(actual).toEqual(expected);
+    });
+});
+
+describe( "Method - getWeekFromDate", () => {
+    test ("Test 1 - 2023-06-02", () =>{
+        const date: Date = new Date("2023-06-02"); 
+        const expected: string = "May 29/05 - Jun 04/06";
+        const actual: string = getWeekFromDate(date);
+        expect(actual).toEqual(expected);
+    });
+
+    test ("Test 2 - 2023-01-10", () =>{
+        const date: Date = new Date("2023-01-10"); 
+        const expected: string = "Jan 09/01 - Jan 15/01";
+        const actual: string = getWeekFromDate(date);
+        expect(actual).toEqual(expected);
+    });
+
+    test ("Test 3 - 2023-03-03", () =>{
+        const date: Date = new Date("2023-03-03"); 
+        const expected: string = "Feb 27/02 - Mar 05/03";
+        const actual: string = getWeekFromDate(date);
+        expect(actual).toEqual(expected);
+    });
+});
+
+describe( "Method - dateToString", () => {
+    test ("Test 1 - 2023-06-02", () =>{
+        const date: Date = new Date("2023-06-02"); 
+        const expected: string = "2/6/2023";
+        const actual: string = dateToString(date);
+        expect(actual).toEqual(expected);
+    });
+
+    test ("Test 2 - 2023-01-10", () =>{
+        const date: Date = new Date("2023-01-10"); 
+        const expected: string = "10/1/2023";
+        const actual: string = dateToString(date);
+        expect(actual).toEqual(expected);
+    });
+
+    test ("Test 3 - 2023-03-03", () =>{
+        const date: Date = new Date("2023-03-03"); 
+        const expected: string = "3/3/2023";
+        const actual: string = dateToString(date);
         expect(actual).toEqual(expected);
     });
 });
