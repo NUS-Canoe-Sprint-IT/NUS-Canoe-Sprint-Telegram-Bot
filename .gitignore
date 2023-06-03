@@ -6,3 +6,4 @@ dist/
 .env
 *.js
 *.test.js
+credentials.json
