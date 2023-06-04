@@ -30,9 +30,12 @@ const bot: Telegraf<Context<Update>> = new Telegraf(APIToken);
 
 bot.start((ctx) => {ctx.reply(greet(ctx.from.first_name));});
 bot.help((ctx) => {ctx.reply(HELP_MESSAGE)})
+bot.command("getBoatAlloc", (ctx) => {dispBoatAllocCommand.getBoatAllocation().then((res) => ctx.reply(res, {parse_mode:"MarkdownV2"}))})
 
 
+console.log("Launching Telegram bot")
 bot.launch();
+console.log("Telegram Bot successfully launched")
 
 /* graceful termination */
 process.once('SIGINT', () => bot.stop('SIGINT'));
