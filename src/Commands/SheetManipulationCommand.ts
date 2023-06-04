@@ -7,7 +7,6 @@ import {DATA_RANGE_MORN, DATA_RANGE_AFTN} from "./CommandConstants"
 
 require('dotenv').config();
 
-
 export class SheetManipulationCommand {
     private googleSpreadsheetInstance: sheets_v4.Resource$Spreadsheets
     private spreadSheetId: string = process.env.SPREADSHEET_ID as string
@@ -18,9 +17,8 @@ export class SheetManipulationCommand {
         this.currentWeek = dateUtils.getWeekFromDate(new Date())
     }
 
-    public parseRawWeeklyAttendance(sheetName: string ,data: string[][]) {
+    private parseRawWeeklyAttendance(sheetName: string ,data: string[][]) {
         var weeklyAttendance: {[key:string]: [string, string][]} = {}
-        console.log(data)
         for (let i = 0; i < 7; i++) {
             const date: string = data[i * 3][0]
             const names: string[] = data[i * 3].splice(1)
@@ -30,7 +28,7 @@ export class SheetManipulationCommand {
         return weeklyAttendance
     }
 
-    public async getWeeklyAttendanceOn(date: Date, AM: Boolean) {
+    protected async getWeeklyAttendanceOn(date: Date, AM: Boolean) {
         const sheetName:string = dateUtils.getWeekFromDate(date)
         const dataRange = AM ? DATA_RANGE_MORN : DATA_RANGE_AFTN
         const sheet = await this.googleSpreadsheetInstance.values.get({   
