@@ -1,6 +1,7 @@
 #excluded folders
 node_modules/
 dist/
+.vscode/
 
 #excluded files
 .env
