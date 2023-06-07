@@ -28,9 +28,13 @@ const dispBoatAllocCommand: DispBoatAllocCommand = new DispBoatAllocCommand(goog
 const APIToken: string = (environment == 'prod' ? process.env.PROD_BOT_TOKEN : process.env.TEST_BOT_TOKEN) as string
 const bot: Telegraf<Context<Update>> = new Telegraf(APIToken);
 
+/* Initializing all the commands */
 bot.start((ctx) => {ctx.reply(greet(ctx.from.first_name));});
 bot.help((ctx) => {ctx.reply(HELP_MESSAGE)})
-bot.command("getBoatAlloc", (ctx) => {dispBoatAllocCommand.getBoatAllocation().then((res) => ctx.reply(res, {parse_mode:"MarkdownV2"}))})
+bot.command("getBoatAlloc", (ctx) => {dispBoatAllocCommand.getBoatAllocation()
+    .then((res) => ctx.reply(res, {parse_mode:"MarkdownV2"}))
+    .catch((e) => {console.error(e.data)})
+})
 
 
 console.log("Launching Telegram bot")
