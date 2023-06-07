@@ -20,11 +20,18 @@ export class DispBoatAllocCommand extends SheetManipulationCommand {
         return "```\n" + message + "```";
     }
 
-    public async getBoatAllocation() {
+    private nobodyPaddling(data: [string, string][]): Boolean {
+        return data.length <= 1 
+    }
+
+    public async getBoatAllocation(): Promise<string> {
         const today = new Date();
-        const AM: Boolean = true;
-        const currentWeekAttendance: {[key: string]: [string, string][]} = await this.getWeeklyAttendanceOn(new Date(), AM);
+        const isAM: Boolean = (today.getHours() <= 12) ;
+        const currentWeekAttendance: {[key: string]: [string, string][]} = await this.getWeeklyAttendanceOn(new Date(), isAM);
         const todaysAlloc: [string, string][] = currentWeekAttendance[dateUtils.dateToString(today)];
+        if (this.nobodyPaddling(todaysAlloc)) {
+            return "Nobody is training in the " + isAM ? "morning":"afternoon"
+        }
         return this.parse(todaysAlloc)
     }
 
