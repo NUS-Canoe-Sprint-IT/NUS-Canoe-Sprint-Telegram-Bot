@@ -11,11 +11,9 @@ require('dotenv').config();
 export class SheetManipulationCommand {
     private googleSpreadsheetInstance: sheets_v4.Resource$Spreadsheets
     private spreadSheetId: string = process.env.SPREADSHEET_ID as string
-    private currentWeek: string;
 
     public constructor(googleSheetInstance: sheets_v4.Sheets) {
         this.googleSpreadsheetInstance = googleSheetInstance.spreadsheets;
-        this.currentWeek = dateUtils.getWeekFromDate(new Date())
     }
 
     private parseRawWeeklyAttendance(sheetName: string ,data: string[][]): {[key: string]: [string, string][]} {
