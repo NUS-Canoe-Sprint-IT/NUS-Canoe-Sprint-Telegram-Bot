@@ -40,8 +40,4 @@ export class SheetManipulationCommand {
         return this.parseRawWeeklyAttendance(sheetName, sheet.data.values as string[][])
     }
 
-    
-    
-
-
 }
