@@ -2,7 +2,7 @@ name: Deploy to Railway
 
 on:
   push:
-    branches: Prod
+    branches: Test
 
 jobs:
   deploy:
@@ -29,4 +29,4 @@ jobs:
       - name: Deploy
         run: railway up
         env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN_PROD }}
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN_TEST }}
