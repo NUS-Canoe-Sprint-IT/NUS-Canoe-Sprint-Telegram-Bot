@@ -28,7 +28,7 @@ export class DispBoatAllocCommand extends SheetManipulationCommand {
         const currentWeekAttendance: {[key: string]: [string, string][]} = await this.getWeeklyAttendanceOn(new Date(), isAM);
         const todaysAlloc: [string, string][] = currentWeekAttendance[dateUtils.dateToString(today)];
         if (this.nobodyPaddling(todaysAlloc)) {
-            return "Nobody is training in the " + isAM ? "morning":"afternoon"
+            return "Nobody is training in the " + (isAM ? "morning":"afternoon")
         }
         return this.parse(todaysAlloc)
     }

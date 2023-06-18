@@ -33,7 +33,7 @@ bot.start((ctx) => {ctx.reply(greet(ctx.from.first_name));});
 bot.help((ctx) => {ctx.reply(HELP_MESSAGE)})
 bot.command("getBoatAlloc", (ctx) => {dispBoatAllocCommand.getBoatAllocation()
     .then((res) => ctx.reply(res, {parse_mode:"MarkdownV2"}))
-    .catch((e) => {console.error(e.data)})
+    .catch((e) => {console.error(e)})
 })
 
 
