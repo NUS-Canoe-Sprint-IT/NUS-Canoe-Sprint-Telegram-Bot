@@ -1,7 +1,7 @@
 import * as dateUtils from "../src/Utils/dateUtils"
 import {DATA_RANGE_MORN, DATA_RANGE_AFTN} from "../src/Commands/CommandConstants"
 import {GenMonthlyAttendanceCommand} from "../src/Commands/GenMonthlyAttendanceCommand"
-import {google, sheets_v4, Auth, Common} from "googleapis";
+import {google, sheets_v4, Auth, Common, drive_v3} from "googleapis";
 
 class GenMonthlyAttendanceCommandTest extends  GenMonthlyAttendanceCommand {
 
@@ -13,8 +13,8 @@ class GenMonthlyAttendanceCommandTest extends  GenMonthlyAttendanceCommand {
         return this.getNumOfDaysIn(date);
     }
 
-    public testGetSheetNames(date: Date): string[] {
-        return this.getSheetNames(date)
+    public testGetSheetNames(date: Date, numberOfDays:number): string[] {
+        return this.getSheetNames(date, numberOfDays)
     }
 }
 
@@ -23,7 +23,10 @@ const auth: Auth.GoogleAuth = new google.auth.GoogleAuth({
     scopes: "https://www.googleapis.com/auth/spreadsheets", 
 });
 const googleSheetInstance: sheets_v4.Sheets = google.sheets({ version: "v4", auth: auth});
-const testCommand: GenMonthlyAttendanceCommandTest = new GenMonthlyAttendanceCommandTest(googleSheetInstance);
+const googleDriveInstance: drive_v3.Drive = google.drive({version:"v3", auth: auth});
+
+const testCommand: GenMonthlyAttendanceCommandTest = new GenMonthlyAttendanceCommandTest(googleSheetInstance, googleDriveInstance);
+
 
 describe( "Method - getLastMonthFrom()", () => {
     test ("Test 1 - May", () =>{
@@ -63,7 +66,7 @@ describe( "Method - testGetNumOfDays()", () => {
 
 describe( "Method - testGetSheetNames()", () => {
     test ("Test 1 - both first and last week of month overlaps into the previous and next month", () =>{
-        const sheetNames: string[] = testCommand.testGetSheetNames(new Date(2023, 0, 1))
+        const sheetNames: string[] = testCommand.testGetSheetNames(new Date(2023, 0, 1),31)
         const expected: string[] = [
             "Dec 26/12 - Jan 01/01",
             "Jan 02/01 - Jan 08/01",
@@ -76,7 +79,7 @@ describe( "Method - testGetSheetNames()", () => {
     });
 
     test ("Test 2 - last week overlaps into next month", () =>{
-        const sheetNames: string[] = testCommand.testGetSheetNames(new Date(2023, 4, 1))
+        const sheetNames: string[] = testCommand.testGetSheetNames(new Date(2023, 4, 1),31)
         const expected: string[] = [
             "May 01/05 - May 07/05",
             "May 08/05 - May 14/05",
@@ -88,7 +91,7 @@ describe( "Method - testGetSheetNames()", () => {
     });
 
     test ("Test 3 - first week overlaps into previous month", () =>{
-        const sheetNames: string[] = testCommand.testGetSheetNames(new Date(2023, 11, 1))
+        const sheetNames: string[] = testCommand.testGetSheetNames(new Date(2023, 11, 1),31)
         const expected: string[] = [
             "Nov 27/11 - Dec 03/12",
             "Dec 04/12 - Dec 10/12",
