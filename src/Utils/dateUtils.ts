@@ -71,3 +71,8 @@ export function dateToString(d: Date): string {
     const dateString = d.getDate() + "/" + (d.getMonth() + 1) + "/" + d.getFullYear()
     return dateString
 }
+
+export function stringToDate(date: string): Date {
+    const [day, month, year]: string[] = date.split("/")
+    return new Date(+year, +month - 1, +day)
+}
