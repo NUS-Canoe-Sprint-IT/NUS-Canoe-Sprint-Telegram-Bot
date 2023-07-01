@@ -62,8 +62,8 @@ describe( "Method - testGetNumOfDays()", () => {
 });
 
 describe( "Method - testGetSheetNames()", () => {
-    test ("Test 1 - Jan", () =>{
-        const sheetNames: string[] = testCommand.testGetSheetNames(new Date(2023, 1, 1))
+    test ("Test 1 - both first and last week of month overlaps into the previous and next month", () =>{
+        const sheetNames: string[] = testCommand.testGetSheetNames(new Date(2023, 0, 1))
         const expected: string[] = [
             "Dec 26/12 - Jan 01/01",
             "Jan 02/01 - Jan 08/01",
@@ -75,8 +75,8 @@ describe( "Method - testGetSheetNames()", () => {
         expect(sheetNames).toEqual(expected);
     });
 
-    test ("Test 1 - May", () =>{
-        const sheetNames: string[] = testCommand.testGetSheetNames(new Date(2023, 5, 1))
+    test ("Test 2 - last week overlaps into next month", () =>{
+        const sheetNames: string[] = testCommand.testGetSheetNames(new Date(2023, 4, 1))
         const expected: string[] = [
             "May 01/05 - May 07/05",
             "May 08/05 - May 14/05",
@@ -86,5 +86,18 @@ describe( "Method - testGetSheetNames()", () => {
         ]
         expect(sheetNames).toEqual(expected);
     });
+
+    test ("Test 3 - first week overlaps into previous month", () =>{
+        const sheetNames: string[] = testCommand.testGetSheetNames(new Date(2023, 11, 1))
+        const expected: string[] = [
+            "Nov 27/11 - Dec 03/12",
+            "Dec 04/12 - Dec 10/12",
+            "Dec 11/12 - Dec 17/12",
+            "Dec 18/12 - Dec 24/12",
+            "Dec 25/12 - Dec 31/12",
+        ]
+        expect(sheetNames).toEqual(expected);
+    });
+
 
 })
