@@ -3,30 +3,30 @@ import {getFirstDateOfWeek, getLastDateOfWeek, getWeekToString, getWeekFromDate,
 
 describe( "Method - getFirstDateOfWeek()", () => {
     test ("Test 1 - date falls on Sunday", () =>{
-        const date: Date = new Date("2023-05-28"); // Monday falls on 2023-05-22
+        const date: Date = new Date(2023,4,28); // Monday falls on 2023-05-22
         const firstDayOfWeek: Date = getFirstDateOfWeek(date);
-        const expectedDate: Date = new Date("2023-05-22");
+        const expectedDate: Date = new Date(2023,4,22);
         expect(firstDayOfWeek).toEqual(expectedDate);
     });
 
     test ("Test 2 - date falls on Monday", () =>{
-        const date: Date = new Date("2022-10-17"); // Monday falls on 2022-10-17
+        const date: Date = new Date(2022,9,17); // Monday falls on 2022-10-17
         const firstDayOfWeek: Date = getFirstDateOfWeek(date);
-        const expectedDate: Date = new Date("2022-10-17");
+        const expectedDate: Date = new Date(2022,9,17);
         expect(firstDayOfWeek).toEqual(expectedDate);
     });
 
     test ("Test 3.1 - date falls on any other day (Wed)", () =>{
-        const date: Date = new Date("2021-11-17"); // Monday falls on 2021-11-15
+        const date: Date = new Date(2021,10,17); // Monday falls on 2021-11-15
         const firstDayOfWeek: Date = getFirstDateOfWeek(date);
-        const expectedDate: Date = new Date("2021-11-15");
+        const expectedDate: Date = new Date(2021,10,15);
         expect(firstDayOfWeek).toEqual(expectedDate);
     });
 
     test ("Test 3.2 - date falls on any other day (Fri)", () =>{
-        const date: Date = new Date("2019-01-18"); // Monday falls on 2021-11-15
+        const date: Date = new Date(2019,0,18); // Monday falls on 2021-11-15
         const firstDayOfWeek: Date = getFirstDateOfWeek(date);
-        const expectedDate: Date = new Date("2019-01-14");
+        const expectedDate: Date = new Date(2019,0,14);
         expect(firstDayOfWeek).toEqual(expectedDate);
     });
 
@@ -34,30 +34,30 @@ describe( "Method - getFirstDateOfWeek()", () => {
 
 describe( "Method - getLastDateOfWeek()", () => {
     test ("Test 1 - date falls on Monday", () =>{
-        const date: Date = new Date("2023-05-22"); // Sunday falls on 2023-05-28
+        const date: Date = new Date(2023,4,22); // Sunday falls on 2023-05-28
         const lastDayOfWeek: Date = getLastDateOfWeek(date);
-        const expectedDate: Date = new Date("2023-05-28"); 
+        const expectedDate: Date = new Date(2023,4,28); 
         expect(lastDayOfWeek).toEqual(expectedDate);
     });
 
     test ("Test 2 - date falls on Sunday", () =>{
-        const date: Date = new Date("2022-10-16"); // Sunday falls on 2022-10-16
+        const date: Date = new Date(2022,9,16); // Sunday falls on 2022-10-16
         const firstDayOfWeek: Date = getLastDateOfWeek(date);
-        const expectedDate: Date = new Date("2022-10-16");
+        const expectedDate: Date = new Date(2022,9,16);
         expect(firstDayOfWeek).toEqual(expectedDate);
     });
 
     test ("Test 3.1 - date falls on any other day (Wed)", () =>{
-        const date: Date = new Date("2021-11-17"); // Sunday falls on 2021-11-21
+        const date: Date = new Date(2021,10,17); // Sunday falls on 2021-11-21
         const firstDayOfWeek: Date = getLastDateOfWeek(date);
-        const expectedDate: Date = new Date("2021-11-21");
+        const expectedDate: Date = new Date(2021,10,21);
         expect(firstDayOfWeek).toEqual(expectedDate);
     });
 
     test ("Test 3.2 - date falls on any other day (Fri)", () =>{
-        const date: Date = new Date("2019-01-18"); // Monday falls on 2021-11-15
+        const date: Date = new Date(2019,0,18); // Monday falls on 2021-11-15
         const firstDayOfWeek: Date = getLastDateOfWeek(date);
-        const expectedDate: Date = new Date("2019-01-20");
+        const expectedDate: Date = new Date(2019,0,20);
         expect(firstDayOfWeek).toEqual(expectedDate);
     });
 });
