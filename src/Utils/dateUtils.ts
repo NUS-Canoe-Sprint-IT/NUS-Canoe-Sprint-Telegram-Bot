@@ -8,8 +8,9 @@ import {months} from "./UtilsConstants";
  * @return {Date} Monday's date of the week which the supplied date is in
  */
 export function getFirstDateOfWeek(d: Date): Date {
-    var mondayDate: number = d.getDate() - d.getDay() + (d.getDay() == 0 ? -6:1);
-    return new Date(d.setDate(mondayDate));
+    const mondayDate: number = d.getDate() - d.getDay() + (d.getDay() == 0 ? -6:1);
+    const tmp: Date = new Date(d.getFullYear(), d.getMonth(), mondayDate)
+    return tmp
 }
 
 /**
@@ -20,8 +21,9 @@ export function getFirstDateOfWeek(d: Date): Date {
  * @return {Date} monday's date of the week which the supplied date is in
  */
 export function getLastDateOfWeek(d: Date): Date {
-    var sundayDate: number = d.getDate() + (d.getDay() == 0 ? 0:(7 - d.getDay()));
-    return new Date(d.setDate(sundayDate));
+    const sundayDate: number = d.getDate() + (d.getDay() == 0 ? 0:(7 - d.getDay()));
+    const tmp: Date = new Date(d.getFullYear(), d.getMonth(), sundayDate)
+    return tmp
 }
 
 /**
@@ -68,4 +70,9 @@ export function getWeekFromDate(d: Date): string {
 export function dateToString(d: Date): string {
     const dateString = d.getDate() + "/" + (d.getMonth() + 1) + "/" + d.getFullYear()
     return dateString
+}
+
+export function stringToDate(date: string): Date {
+    const [day, month, year]: string[] = date.split("/")
+    return new Date(+year, +month - 1, +day)
 }
