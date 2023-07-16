@@ -15,6 +15,7 @@ export class GenMonthlyAttendanceCommand extends SheetManipulationCommand {
         super(googleSheetInstance)
         this.googleDriveInstance = googleDriveInstance;
     }
+
     protected getLastMonthFrom(date: Date): Date {
         return date.getMonth() == 0 ? new Date(date.getFullYear()-1, 11, 1): new Date(date.getFullYear(), date.getMonth() - 1, 1);
     }
@@ -39,7 +40,7 @@ export class GenMonthlyAttendanceCommand extends SheetManipulationCommand {
         return sheetNames
     }
 
-    private parseRawWeeklyBoatAlloc(amAttendance: string[][], pmAttendance: string[][]): {[key: string]: string[]} {
+    protected parseRawWeeklyBoatAlloc(amAttendance: string[][], pmAttendance: string[][]): {[key: string]: string[]} {
         var weeklyAttendance: {[key:string]: string[]} = {};
         for (let i = 0; i < 7; i++) {
             const date: string = amAttendance[i * 3][0];
@@ -57,7 +58,7 @@ export class GenMonthlyAttendanceCommand extends SheetManipulationCommand {
         return weeklyAttendanceParsed
     }
 
-    private filteredDates(month: number, data:{[key: string]: string[]}): {[key: string]: string[]} {
+    protected filteredDates(month: number, data:{[key: string]: string[]}): {[key: string]: string[]} {
         const filteredDates: {[key: string]: string[]}= {}
         for (let key in data) {
             const date:Date = dateUtils.stringToDate(key);
@@ -68,7 +69,7 @@ export class GenMonthlyAttendanceCommand extends SheetManipulationCommand {
         return filteredDates
     }
 
-    private parseNicknameTableMap(rawNicknameTableMap: string[][]): {[key: string]: string} {
+    protected parseNicknameTableMap(rawNicknameTableMap: string[][]): {[key: string]: string} {
         const nicknames: string[]= rawNicknameTableMap[0];
         const names: string[] = rawNicknameTableMap[1];
         const nicknameTableMap: {[key: string]: string} = {}
@@ -87,7 +88,7 @@ export class GenMonthlyAttendanceCommand extends SheetManipulationCommand {
         return sheet.data.values as string[][]
     }
 
-    private async parseData(rawData: {[key: string]: string[]}, nicknameTable: {[key:string]:string} ): Promise<{[key: string]: string[]}> {
+    protected parseData(rawData: {[key: string]: string[]}, nicknameTable: {[key:string]:string} ): {[key: string]: string[]} {
         for (let key in rawData) {
             rawData[key] = rawData[key].map((nickname) => nicknameTable[nickname]).filter((name) => {return name != undefined})
         }
