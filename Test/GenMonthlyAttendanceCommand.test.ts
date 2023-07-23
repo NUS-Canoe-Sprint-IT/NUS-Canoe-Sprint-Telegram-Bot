@@ -17,8 +17,8 @@ class GenMonthlyAttendanceCommandTest extends  GenMonthlyAttendanceCommand {
         return this.getSheetNames(date, numberOfDays)
     }
 
-    public testParseRawWeeklyBoatAlloc (amAttendance: string[][], pmAttendance: string[][]): {[key: string]: string[]}  {
-        return this.parseRawWeeklyBoatAlloc(amAttendance, pmAttendance)
+    public testParseRawWeeklyAttendance(amAttendance: string[][], pmAttendance: string[][]): {[key: string]: string[]}  {
+        return this.parseRawWeeklyAttendance(amAttendance, pmAttendance)
     }
 
     public testFilteredDates(month: number, data:{[key: string]: string[]}): {[key: string]: string[]} {
@@ -122,7 +122,7 @@ describe( "Method - testGetSheetNames()", () => {
 
 })
 
-describe( "Method - testParseRawWeeklyBoatAlloc()", () => {
+describe( "Method - testParseRawWeeklyAttendance()", () => {
     test ("Test 1 - normal case scenario", () =>{
         const amAttendance: string[][] = [
             ["1/1/2023","Name","abc","def"],[],[],
@@ -151,7 +151,7 @@ describe( "Method - testParseRawWeeklyBoatAlloc()", () => {
             "6/1/2023":["abc","def","EVE"],
             "7/1/2023":["abc","def"],
         };
-        const actual: {[key:string]:string[]} = testCommand.testParseRawWeeklyBoatAlloc(amAttendance,pmAttendance)
+        const actual: {[key:string]:string[]} = testCommand.testParseRawWeeklyAttendance(amAttendance,pmAttendance)
         expect(expected).toMatchObject(actual);
     });
 
@@ -183,7 +183,7 @@ describe( "Method - testParseRawWeeklyBoatAlloc()", () => {
             "6/1/2023":[],
             "7/1/2023":[],
         };
-        const actual: {[key:string]:string[]} = testCommand.testParseRawWeeklyBoatAlloc(amAttendance,pmAttendance)
+        const actual: {[key:string]:string[]} = testCommand.testParseRawWeeklyAttendance(amAttendance,pmAttendance)
         expect(expected).toMatchObject(actual);
     });
 })

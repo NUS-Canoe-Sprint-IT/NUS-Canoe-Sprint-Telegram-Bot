@@ -16,10 +16,26 @@ export class GenMonthlyAttendanceCommand extends SheetManipulationCommand {
         this.googleDriveInstance = googleDriveInstance;
     }
 
+    /**
+     * Computes the date of the previous month from the current date
+     *
+     * @protected
+     * @param {Date} date current date
+     * @return {Date} date of start of last month 
+     * @memberof GenMonthlyAttendanceCommand
+     */
     protected getLastMonthFrom(date: Date): Date {
         return date.getMonth() == 0 ? new Date(date.getFullYear()-1, 11, 1): new Date(date.getFullYear(), date.getMonth() - 1, 1);
     }
 
+    /**
+     * Computes number of days in the month of the given date
+     *
+     * @protected
+     * @param {Date} date current date
+     * @return {number} the number of days in the month of the given date
+     * @memberof GenMonthlyAttendanceCommand
+     */
     protected getNumOfDaysIn(date: Date): number {
         const tmp: Date = new Date(date);
         tmp.setMonth(tmp.getMonth()+1);
@@ -27,6 +43,15 @@ export class GenMonthlyAttendanceCommand extends SheetManipulationCommand {
         return tmp.getDate();
     }
 
+    /**
+     * Computes the name of the sheets of interest based on the date and the number of days in the month of the give date
+     *
+     * @protected
+     * @param {Date} date the date of interest 
+     * @param {number} numOfDaysInLastMonth the number of days in the month of the given date
+     * @return {string[]} the list of sheet names
+     * @memberof GenMonthlyAttendanceCommand
+     */
     protected getSheetNames(date: Date, numOfDaysInLastMonth: number): string[] {
         const sheetNames: string[] = [];
         for (let i = 1; i < numOfDaysInLastMonth; i = i + 7) {
@@ -40,7 +65,16 @@ export class GenMonthlyAttendanceCommand extends SheetManipulationCommand {
         return sheetNames
     }
 
-    protected parseRawWeeklyBoatAlloc(amAttendance: string[][], pmAttendance: string[][]): {[key: string]: string[]} {
+    /**
+     * parses the weekly attendance into dictionary format
+     *
+     * @protected
+     * @param {string[][]} amAttendance
+     * @param {string[][]} pmAttendance
+     * @return {{[key: string]: string[]}} weekly attendance in dictionary format
+     * @memberof GenMonthlyAttendanceCommand
+     */
+    protected parseRawWeeklyAttendance(amAttendance: string[][], pmAttendance: string[][]): {[key: string]: string[]} {
         var weeklyAttendance: {[key:string]: string[]} = {};
         for (let i = 0; i < 7; i++) {
             const date: string = amAttendance[i * 3][0];
@@ -50,25 +84,48 @@ export class GenMonthlyAttendanceCommand extends SheetManipulationCommand {
         return weeklyAttendance
     }
 
+    /**
+     * Gets the weekly attendance based on the sheetname
+     *
+     * @private
+     * @param {string} sheetName
+     * @return {Promise<{[key: string]: string[]}>} weekly attendance
+     * @memberof GenMonthlyAttendanceCommand
+     */
     private async getWeeklyAttendanceData(sheetName: string): Promise<{[key: string]: string[]}> {
         const AM: Boolean = true;
         const amAttendance: string[][] = await this.getWeeklyAttendanceOn(sheetName, AM);
         const pmAttendance: string[][] = await this.getWeeklyAttendanceOn(sheetName, !AM);
-        const weeklyAttendanceParsed = this.parseRawWeeklyBoatAlloc(amAttendance,pmAttendance);
+        const weeklyAttendanceParsed = this.parseRawWeeklyAttendance(amAttendance,pmAttendance);
         return weeklyAttendanceParsed
     }
 
-    protected filteredDates(month: number, data:{[key: string]: string[]}): {[key: string]: string[]} {
+    /**
+     * removes dates which are not in the target month
+     *
+     * @protected
+     * @param {number} month
+     * @param {{[key: string]: string[]}} unfilteredDates
+     * @return {{[key: string]: string[]}}
+     * @memberof GenMonthlyAttendanceCommand
+     */
+    protected filteredDates(month: number, unfilteredDates:{[key: string]: string[]}): {[key: string]: string[]} {
         const filteredDates: {[key: string]: string[]}= {}
-        for (let key in data) {
+        for (let key in unfilteredDates) {
             const date:Date = dateUtils.stringToDate(key);
             if (date.getMonth() == month){
-                filteredDates[key] = data[key];
+                filteredDates[key] = unfilteredDates[key];
             }
         }
         return filteredDates
     }
 
+    /**
+     * Computes the mapping between full name and nick name from raw data retrieved from google sheets
+     * 
+     * @param rawNicknameTableMap 
+     * @returns dictionary containintg the nickname to full name mapping
+     */
     protected parseNicknameTableMap(rawNicknameTableMap: string[][]): {[key: string]: string} {
         const nicknames: string[]= rawNicknameTableMap[0];
         const names: string[] = rawNicknameTableMap[1];
@@ -79,6 +136,11 @@ export class GenMonthlyAttendanceCommand extends SheetManipulationCommand {
         return nicknameTableMap
     }
 
+    /**
+     * Gets the nickname table from google sheets
+     * 
+     * @returns raw nickname table to be parsed
+     */
     private async getNickNames(): Promise<string[][]> {
         const sheet = await this.googleSpreadsheetInstance.values.get({   
             range: "Nicknames!A:B",
@@ -88,13 +150,25 @@ export class GenMonthlyAttendanceCommand extends SheetManipulationCommand {
         return sheet.data.values as string[][]
     }
 
-    protected parseData(rawData: {[key: string]: string[]}, nicknameTable: {[key:string]:string} ): {[key: string]: string[]} {
-        for (let key in rawData) {
-            rawData[key] = rawData[key].map((nickname) => nicknameTable[nickname]).filter((name) => {return name != undefined})
+    /**
+     * Maps the nicknames from the raw monthly attendance to the full name
+     * 
+     * @param rawMonthlyData 
+     * @param nicknameTable 
+     * @returns Monthly attendance with full name
+     */
+    protected parseData(rawMonthlyData: {[key: string]: string[]}, nicknameTable: {[key:string]:string} ): {[key: string]: string[]} {
+        for (let key in rawMonthlyData) {
+            rawMonthlyData[key] = rawMonthlyData[key].map((nickname) => nicknameTable[nickname]).filter((name) => {return name != undefined})
         }
-        return rawData
+        return rawMonthlyData
     }
 
+    /**
+     * gets the attendance data of the last month 
+     * @param nicknameTable 
+     * @returns attendance data of the last month
+     */
     private async getLastMonthData(nicknameTable: {[key:string]:string}): Promise<{[key: string]: string[]}> {
         const date: Date = this.getLastMonthFrom(new Date());
         const numOfDaysInMonth: number = this.getNumOfDaysIn(date);
@@ -107,7 +181,14 @@ export class GenMonthlyAttendanceCommand extends SheetManipulationCommand {
         return this.parseData(rawData, nicknameTable);
     }
 
-    public async writeToDrive(attendance: string[][]) {
+    /**
+     * Writes the attendance data to an google sheet file and save it into the drive
+     *
+     * @private
+     * @param {string[][]} attendance
+     * @memberof GenMonthlyAttendanceCommand
+     */
+    private async writeToDrive(attendance: string[][]) {
         const sheetName: string = (this.getLastMonthFrom(new Date()).toLocaleDateString('en-GB',{month:'long'})) + ' Training Attendance'
         const driveReqBody: {[key: string]: any} = {
             'name': sheetName,
@@ -120,6 +201,11 @@ export class GenMonthlyAttendanceCommand extends SheetManipulationCommand {
         this.googleSpreadsheetInstance.values.update({spreadsheetId:fileID, range:"Sheet1", valueInputOption:'USER_ENTERED', requestBody:sheetReqBody})
     }
 
+    /**
+     * command called by user from the telegram interface
+     *
+     * @memberof GenMonthlyAttendanceCommand
+     */
     public async generateAttendance() {
         const nicknameTable: string[][] = await this.getNickNames();
         const fullnameList: string[] = nicknameTable[1].slice(1);
@@ -136,6 +222,5 @@ export class GenMonthlyAttendanceCommand extends SheetManipulationCommand {
         const output:string[][] = formalData.values as string[][]
         output.unshift(formalData.columns)
         this.writeToDrive(output)
-        return (this.getLastMonthFrom(new Date()).toLocaleDateString('en-GB',{month:'long'}))
     }
 }
