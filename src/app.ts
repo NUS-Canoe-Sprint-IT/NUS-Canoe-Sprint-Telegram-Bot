@@ -43,6 +43,7 @@ bot.command("genAttendance", (ctx) => {genMonthlyAttendanceCommand.generateAtten
     .then((res) => ctx.reply(res + " Training attendance created"))
     .catch((e) => {console.error(e)})
 })
+// unsure if this is the correct text handling format
 bot.command("form", async (ctx: Context) => {
     await ctx.reply("Send your name, contact number, number of 1 star paddlers and non-certified paddlers, start time and end time in 24h format (14:00 for afternoon) like this: \n Rouvin\n 81234567\n 15\n 4\n 07:30\n 09:30\n ONLY NAMES CAN HAVE SPACES"
     const textListener = (textCtx: Context) => {
