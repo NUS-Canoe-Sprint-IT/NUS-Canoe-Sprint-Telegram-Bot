@@ -33,7 +33,7 @@ const APIToken: string = (environment == 'prod' ? process.env.PROD_BOT_TOKEN : p
 const bot: Telegraf<Context<Update>> = new Telegraf(APIToken);
 
 /* Initialise scene for form */
-const formScene = new Scenes.BaseScene<any>('form');
+const formScene = new Scenes.BaseScene<any>('fillform');
 const stage = new Scenes.Stage([formScene]);
 const fillFormInstance: FillForm = new FillForm();
 
@@ -68,7 +68,7 @@ bot.command("genAttendance", (ctx) => {genMonthlyAttendanceCommand.generateAtten
     .catch((e) => {console.error(e)})
 });
 bot.command("form", (ctx: any) => { 
-    ctx.enter.scene('formScene');
+    ctx.enter.scene('fillform');
 });
 
 console.log("Launching Telegram bot");
