@@ -33,8 +33,7 @@ const APIToken: string = (environment == 'prod' ? process.env.PROD_BOT_TOKEN : p
 const bot: Telegraf<Context<Update>> = new Telegraf(APIToken);
 
 /* Initialise scene for form */
-// does not work due to context issues ;c
-const formScene = new Scenes.BaseScene('form');
+const formScene = new Scenes.BaseScene<any>('form');
 const stage = new Scenes.Stage([formScene]);
 
 formScene.enter((ctx) => {
@@ -46,8 +45,7 @@ formScene.on("text", (ctx) => {
     const values = userInput.split('\n').map(value => value.trim());
     if (values.length >= 6) {
         const [name, hp, onestar, zerostar, startTime, endTime] = values;
-        // TestForm.submitForm(name, hp, onestar, zerostar, startTime, endTime);
-        // testing
+        TestForm.submitForm(name, hp, onestar, zerostar, startTime, endTime);
         ctx.reply('Form Submitted!');
         ctx.scene.leave();
     } else {
@@ -56,7 +54,6 @@ formScene.on("text", (ctx) => {
 })
 
 /* Initializing all the commands */
-// initialize session + middleware for the scene
 bot.use(session());
 bot.use(stage.middleware());
 bot.start((ctx) => {ctx.reply(greet(ctx.from.first_name));});
@@ -69,8 +66,7 @@ bot.command("genAttendance", (ctx) => {genMonthlyAttendanceCommand.generateAtten
     .then((res) => ctx.reply(res + " Training attendance created"))
     .catch((e) => {console.error(e)})
 });
-// /form command does not work
-bot.command("form", (ctx) => { 
+bot.command("form", (ctx: any) => { 
     ctx.enter.scene('formScene');
 });
 
