@@ -1,7 +1,14 @@
-const fetch = require('node-fetch');
+import fetch from 'node-fetch';
 
-export class TestForm {
-	public async submitForm(name: string, hp: string, oneStar: string, zeroStar: string, startTime: string, endTime: string){
+export class FillForm {
+	public async submitForm(
+		name: string, 
+		hp: string, 
+		oneStar: string, 
+		zeroStar: string, 
+		startTime: string, 
+		endTime: string
+	){
 		const encoded_name = encodeURIComponent(name);
 
 		const currentDate = new Date();

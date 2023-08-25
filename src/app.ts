@@ -8,7 +8,7 @@ import {greet} from './Commands/greetings';
 import {HELP_MESSAGE} from './Commands/CommandConstants';
 import {DispBoatAllocCommand} from './Commands/dispBoatAllocCommand'
 import { GenMonthlyAttendanceCommand } from './Commands/GenMonthlyAttendanceCommand';
-import { TestForm } from './Commands/TestForm'; 
+import { FillForm } from './Commands/TestForm';
 
 /* Load environment variables */
 require('dotenv').config();
@@ -35,6 +35,7 @@ const bot: Telegraf<Context<Update>> = new Telegraf(APIToken);
 /* Initialise scene for form */
 const formScene = new Scenes.BaseScene<any>('form');
 const stage = new Scenes.Stage([formScene]);
+const fillFormInstance: FillForm = new FillForm();
 
 formScene.enter((ctx) => {
     ctx.reply('Enter details (Use /help to see what is required)');
@@ -45,7 +46,7 @@ formScene.on("text", (ctx) => {
     const values = userInput.split('\n').map(value => value.trim());
     if (values.length >= 6) {
         const [name, hp, onestar, zerostar, startTime, endTime] = values;
-        TestForm.submitForm(name, hp, onestar, zerostar, startTime, endTime);
+        fillFormInstance.submitForm(name, hp, onestar, zerostar, startTime, endTime);
         ctx.reply('Form Submitted!');
         ctx.scene.leave();
     } else {
