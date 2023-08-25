@@ -34,7 +34,7 @@ const bot: Telegraf<Context<Update>> = new Telegraf(APIToken);
 
 /* Initialise scene for form */
 const formScene = new Scenes.BaseScene<any>('fillform');
-const stage = new Scenes.Stage([formScene]);
+const stage = new Scenes.Stage<any>([formScene]);
 const fillFormInstance: FillForm = new FillForm();
 
 formScene.enter((ctx) => {
