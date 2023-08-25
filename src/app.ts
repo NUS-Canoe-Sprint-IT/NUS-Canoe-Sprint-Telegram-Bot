@@ -50,7 +50,7 @@ formScene.on("text", (ctx) => {
         ctx.reply('Form Submitted!');
         ctx.scene.leave();
     } else {
-        ctx.reply('Please check your input! Follow the format exactly.');
+        ctx.reply('Please check your input!');
     }
 })
 
