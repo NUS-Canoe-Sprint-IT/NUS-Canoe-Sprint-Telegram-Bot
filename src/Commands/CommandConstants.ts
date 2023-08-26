@@ -3,12 +3,11 @@ export const HELP_MESSAGE = (
     "/getBoatAlloc - Display boat allocations\n" +
     "/form - Fill in daily log sheet. Send your:\n" +
     "Name: Your Name\n" + 
-    "Contact Number: 81234567\n" +
-    "Number of 1-star Paddlers: 15\n" +
-    "Number of Non-certified Paddlers: 4\n" +
-    "Time of Day: morning / afternoon" +
+    "Contact Number\n" +
+    "Number of 1-star Paddlers\n" +
+    "Number of Non-certified Paddlers\n" +
+    "Time of Day: (morning / afternoon)\n" +
     "Example:\n" +
-    "/form\n" +
     "Rouvin\n" +
     "81234567\n" +
     "15\n" +
