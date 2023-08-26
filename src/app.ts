@@ -41,19 +41,60 @@ formScene.enter((ctx) => {
     ctx.reply('Enter details (Use /help to see what is required)');
 })
 
-formScene.on("text", (ctx) => {
+formScene.on("text", async (ctx) => {
     const userInput = ctx.message.text;
     const values = userInput.split('\n').map(value => value.trim());
-    if (values.length >= 6) {
-        const [name, hp, onestar, zerostar, startTime, endTime] = values;
-        fillFormInstance.submitForm(name, hp, onestar, zerostar, startTime, endTime);
-        ctx.reply('Form Submitted!');
-        ctx.scene.leave();
-    } else {
-        ctx.reply('Please check your input! Use /form to try again.');
-        ctx.scene.leave();
+
+    if (values.length !== 5) {
+        ctx.reply('Ensure that you have entered all details (5 in total).');
+        return;
     }
-})
+    const [name, hp, onestar, zerostar, timeOfDay] = values;
+    if (!name || !hp || !onestar || !zerostar || !timeOfDay) {
+        ctx.reply('Invalid input. Please check your values.');
+        ctx.scene.enter('fillform');
+        return;
+    }
+    const cleanedHp = hp.replace(/\s/g, '');
+    const cleanedOnestar = onestar.replace(/\s/g, '');
+    const cleanedZerostar = zerostar.replace(/\s/g, '');
+    const cleanedTimeOfDay = timeOfDay.replace(/\s/g, '');
+    if (!(/^[a-zA-Z]+$/.test(name)) ||
+        !(/^[\d]+$/.test(cleanedHp)) ||
+        !(/^[\d]+$/.test(cleanedOnestar)) ||
+        !(/^[\d]+$/.test(cleanedZerostar)) ||
+        !(/^[a-zA-Z]+$/.test(timeOfDay))) {
+    ctx.reply('Check your input please. Only have numbers where numbers are allowed!');
+    ctx.scene.enter('fillform');
+    return;
+    }
+
+    if (cleanedHp.length !== 8){
+        ctx.reply('Enter a valid phone number');
+        ctx.scene.enter('fillform');
+        return;
+    }
+
+    let startTime, endTime;
+
+    if (cleanedTimeOfDay.toLowerCase() === 'morning') {
+        startTime = '07:30';
+        endTime = '10:00';
+    } 
+    else if (cleanedTimeOfDay.toLowerCase() === 'afternoon'){
+        startTime = '16:00';
+        endTime = '18:00';
+    } 
+    try {
+        const res = await fillFormInstance.submitForm(name, cleanedHp, cleanedOnestar, cleanedZerostar, startTime, endTime);
+        ctx.reply('Form submitted!');
+        ctx.scene.leave();
+    } catch (error) {
+        ctx.reply('Failed to submit form. Check your input!')
+        ctx.scene.enter('fillform');
+        return;
+    }
+});
 
 /* Initializing stage + bot */
 const bot = new Telegraf<Scenes.SceneContext>(APIToken);
