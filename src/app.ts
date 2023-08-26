@@ -44,7 +44,6 @@ formScene.enter((ctx) => {
 formScene.on("text", async (ctx) => {
     const userInput = ctx.message.text;
     const values = userInput.split('\n').map(value => value.trim());
-
     if (values.length !== 5) {
         ctx.reply('Ensure that you have entered all details (5 in total).');
         return;
@@ -59,8 +58,7 @@ formScene.on("text", async (ctx) => {
     const cleanedOnestar = onestar.replace(/\s/g, '');
     const cleanedZerostar = zerostar.replace(/\s/g, '');
     const cleanedTimeOfDay = timeOfDay.replace(/\s/g, '');
-    if (!(/^[a-zA-Z]+$/.test(name)) ||
-        !(/^[\d]+$/.test(cleanedHp)) ||
+    if (!(/^[\d]+$/.test(cleanedHp)) ||
         !(/^[\d]+$/.test(cleanedOnestar)) ||
         !(/^[\d]+$/.test(cleanedZerostar)) ||
         !(/^[a-zA-Z]+$/.test(timeOfDay))) {
@@ -68,25 +66,16 @@ formScene.on("text", async (ctx) => {
     ctx.scene.enter('fillform');
     return;
     }
-
-    if (cleanedHp.length !== 8){
-        ctx.reply('Enter a valid phone number');
-        ctx.scene.enter('fillform');
-        return;
-    }
-
     let startTime, endTime;
 
     if (cleanedTimeOfDay.toLowerCase() === 'morning') {
         startTime = '07:30';
         endTime = '10:00';
-    } 
-    else if (cleanedTimeOfDay.toLowerCase() === 'afternoon'){
+    } else if (cleanedTimeOfDay.toLowerCase() === 'afternoon'){
         startTime = '16:00';
         endTime = '18:00';
-    } 
-    else {
-        ctx.reply('Check the time of day!');
+    } else {
+        ctx.reply('Please enter a correct time!');
         ctx.scene.enter('fillform');
         return;
     }
@@ -94,6 +83,7 @@ formScene.on("text", async (ctx) => {
         const res = await fillFormInstance.submitForm(name, cleanedHp, cleanedOnestar, cleanedZerostar, startTime, endTime);
         ctx.reply('Form submitted!');
         ctx.scene.leave();
+        return;
     } catch (error) {
         ctx.reply('Failed to submit form. Check your input!')
         ctx.scene.enter('fillform');
