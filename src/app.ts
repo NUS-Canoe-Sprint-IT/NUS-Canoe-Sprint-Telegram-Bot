@@ -79,16 +79,9 @@ formScene.on("text", async (ctx) => {
         ctx.scene.enter('fillform');
         return;
     }
-    try {
-        const res = await fillFormInstance.submitForm(name, cleanedHp, cleanedOnestar, cleanedZerostar, startTime, endTime);
-        ctx.reply('Form submitted!');
-        ctx.scene.leave();
-        return;
-    } catch (error) {
-        ctx.reply('Failed to submit form. Check your input!')
-        ctx.scene.enter('fillform');
-        return;
-    }
+    fillFormInstance.submitForm(name, cleanedHp, cleanedOnestar, cleanedZerostar, startTime, endTime);
+    ctx.reply('Form submitted!');
+    ctx.scene.leave();
 });
 
 /* Initializing stage + bot */
