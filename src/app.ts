@@ -85,6 +85,11 @@ formScene.on("text", async (ctx) => {
         startTime = '16:00';
         endTime = '18:00';
     } 
+    else {
+        ctx.reply('Check the time of day!');
+        ctx.scene.enter('fillform');
+        return;
+    }
     try {
         const res = await fillFormInstance.submitForm(name, cleanedHp, cleanedOnestar, cleanedZerostar, startTime, endTime);
         ctx.reply('Form submitted!');
