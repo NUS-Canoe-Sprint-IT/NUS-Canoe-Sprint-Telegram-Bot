@@ -30,7 +30,7 @@ export class FillForm {
 		  }
 		});
 
-		if (!response.ok || !response.body.includes('Your response has been recorded')){
+		if (!response.ok){
 			throw new Error('Failed to submit form! Use /form to try again');
 		}
 	} 
