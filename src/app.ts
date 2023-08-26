@@ -1,4 +1,4 @@
-import { Context, Telegraf, Scenes, session } from 'telegraf';
+import { Telegraf, Scenes, session } from 'telegraf';
 import {botRequest} from 'telegraf/typings/button';
 import {Update} from 'typegram';
 import {google, sheets_v4, Auth, Common, drive_v3} from "googleapis";
@@ -30,11 +30,11 @@ const genMonthlyAttendanceCommand: GenMonthlyAttendanceCommand = new GenMonthlyA
 
 /* Initialize Telegram Bot */
 const APIToken: string = (environment == 'prod' ? process.env.PROD_BOT_TOKEN : process.env.TEST_BOT_TOKEN) as string;
-const bot: Telegraf<Context<Update>> = new Telegraf(APIToken);
 
 /* Initialise scene for form */
-const formScene = new Scenes.BaseScene<any>('fillform');
-const stage = new Scenes.Stage<any>([formScene]);
+const { enter, leave } = Scenes.Stage;
+const formScene = new Scenes.BaseScene<Scenes.SceneContext>('fillform');
+
 const fillFormInstance: FillForm = new FillForm();
 
 formScene.enter((ctx) => {
@@ -50,13 +50,20 @@ formScene.on("text", (ctx) => {
         ctx.reply('Form Submitted!');
         ctx.scene.leave();
     } else {
-        ctx.reply('Please check your input!');
+        ctx.reply('Please check your input! Use /form to try again.');
+        ctx.scene.leave();
     }
 })
 
-/* Initializing all the commands */
+/* Initializing stage + bot */
+const bot = new Telegraf<Scenes.SceneContext>(APIToken);
+const stage = new Scenes.Stage<Scenes.SceneContext>([formScene], {
+    ttl: 30,
+});
 bot.use(session());
 bot.use(stage.middleware());
+
+/* Initializing all the commands */
 bot.start((ctx) => {ctx.reply(greet(ctx.from.first_name));});
 bot.help((ctx) => {ctx.reply(HELP_MESSAGE)})
 bot.command("getBoatAlloc", (ctx) => {dispBoatAllocCommand.getBoatAllocation()
@@ -67,8 +74,8 @@ bot.command("genAttendance", (ctx) => {genMonthlyAttendanceCommand.generateAtten
     .then((res) => ctx.reply(res + " Training attendance created"))
     .catch((e) => {console.error(e)})
 });
-bot.command("form", (ctx: any) => { 
-    ctx.enter.scene('fillform');
+bot.command("form", (ctx) => { 
+    ctx.scene.enter("fillform");
 });
 
 console.log("Launching Telegram bot");
