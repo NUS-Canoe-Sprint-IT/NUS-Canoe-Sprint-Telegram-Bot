@@ -44,7 +44,7 @@ const fillFormInstance: FillForm = new FillForm();
 
 /* Initializing stage + bot */
 //const bot = new Telegraf<Scenes.SceneContext>(APIToken);
-const bot = new Telegraf<Scenes.SceneContext>('***REMOVED***');
+const bot = new Telegraf<Scenes.SceneContext>('6399283220:AAHPNC5bCRZzQuWo2UKc2_I6NRQB6tIAN5w');
 const stage = formStageCreator.stage;
 bot.use(session());
 bot.use(stage.middleware());

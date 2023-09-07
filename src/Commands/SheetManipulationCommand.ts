@@ -9,7 +9,7 @@ require('dotenv').config();
 
 export class SheetManipulationCommand {
     protected googleSpreadsheetInstance: sheets_v4.Resource$Spreadsheets
-    protected spreadSheetId: string = '***REMOVED***'
+    protected spreadSheetId: string = process.env.SPREADSHEET_ID as string
 
     public constructor(googleSheetInstance: sheets_v4.Sheets) {
         this.googleSpreadsheetInstance = googleSheetInstance.spreadsheets;
