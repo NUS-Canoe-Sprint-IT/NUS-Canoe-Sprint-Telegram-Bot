@@ -8,8 +8,8 @@ import {greet} from './Commands/greetings';
 import {HELP_MESSAGE} from './Commands/CommandConstants';
 import {DispBoatAllocCommand} from './Commands/dispBoatAllocCommand'
 import { GenMonthlyAttendanceCommand } from './Commands/GenMonthlyAttendanceCommand';
-import { GetDailyAttendanceCommand } from './Commands/GetDailyAttendanceCommand';
-import { FillForm } from './Commands/TestForm';
+import { CertifiedPaddlerCounter } from './Commands/CertifiedPaddlerCounter';
+import { FillForm } from './Commands/TestForm'; // still testing!
 import { FormStageCreator } from './Utils/FormStageCreator';
 import { FormDetails } from './Utils/FormDetails';
 
@@ -30,7 +30,7 @@ const googleDriveInstance: drive_v3.Drive = google.drive({version:"v3", auth: au
 /* Initialize command objects */
 const dispBoatAllocCommand: DispBoatAllocCommand = new DispBoatAllocCommand(googleSheetInstance);
 const genMonthlyAttendanceCommand: GenMonthlyAttendanceCommand = new GenMonthlyAttendanceCommand(googleSheetInstance, googleDriveInstance);
-const getDailyAttendanceCommand: GetDailyAttendanceCommand = new GetDailyAttendanceCommand(googleSheetInstance);
+const getDailyAttendanceCommand: CertifiedPaddlerCounter = new CertifiedPaddlerCounter(googleSheetInstance);
 
 /* Initialize Telegram Bot */
 const APIToken: string = (environment == 'prod' ? process.env.PROD_BOT_TOKEN : process.env.TEST_BOT_TOKEN) as string;
@@ -43,7 +43,8 @@ const formStageCreator: FormStageCreator = new FormStageCreator(userIdToUser, cu
 const fillFormInstance: FillForm = new FillForm();
 
 /* Initializing stage + bot */
-const bot = new Telegraf<Scenes.SceneContext>(APIToken);
+//const bot = new Telegraf<Scenes.SceneContext>(APIToken);
+const bot = new Telegraf<Scenes.SceneContext>('5954441458:AAF9ZrWunkgnj9ZUS0yrK6cM7JpS1Q60pd4');
 const stage = formStageCreator.stage;
 bot.use(session());
 bot.use(stage.middleware());

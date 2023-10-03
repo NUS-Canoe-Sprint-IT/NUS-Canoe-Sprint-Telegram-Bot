@@ -2,16 +2,17 @@ import { Context, Telegraf, Scenes, Markup, session } from 'telegraf';
 import { Message } from 'typegram';
 import { FormDetails } from './FormDetails';
 import { User } from './User';
-import { GetDailyAttendanceCommand } from '../Commands/GetDailyAttendanceCommand';
+import { CertifiedPaddlerCounter } from '../Commands/CertifiedPaddlerCounter';
+import { FillForm } from '../Commands/TestForm';
 import { stringIsInteger, stringIsValidHhMm, stringIsValidContactNumber, stringIsNegative, invalidInputWarning } from './inputValidationUtils'; 
 
 export class FormStageCreator {
     public stage: Scenes.Stage<Scenes.SceneContext>;
     private currentFormDetails: FormDetails;
-    private getDailyAttendanceCommand: GetDailyAttendanceCommand;
+    private CertifiedPaddlerCounter: CertifiedPaddlerCounter;
     
     private async autoPopulateCurrentForm() {
-        await this.getDailyAttendanceCommand.getOneStarZeroStarCount().then((res) => {
+        await this.CertifiedPaddlerCounter.getOneStarZeroStarCount().then((res) => {
             const oneStar = res[0];
             const zeroStar = res[1];
             console.log(oneStar);
@@ -35,9 +36,9 @@ export class FormStageCreator {
         }
     }
 
-    public constructor(userIdToUser: Map<number, User>, currentFormDetails: FormDetails, getDailyAttendanceCommand: GetDailyAttendanceCommand) {
+    public constructor(userIdToUser: Map<number, User>, currentFormDetails: FormDetails, CertifiedPaddlerCounter: CertifiedPaddlerCounter) {
         this.currentFormDetails = currentFormDetails;
-        this.getDailyAttendanceCommand = getDailyAttendanceCommand;
+        this.CertifiedPaddlerCounter = CertifiedPaddlerCounter;
 
         const formInitialScene = new Scenes.BaseScene<Scenes.SceneContext>('formInit');
         const userInfoScene = new Scenes.BaseScene<Scenes.SceneContext>('userInfo');
@@ -46,6 +47,7 @@ export class FormStageCreator {
         const editNonCertifiedPaddlersScene = new Scenes.BaseScene<Scenes.SceneContext>('editNonCertifiedPaddlers');
         const editStartTimeScene = new Scenes.BaseScene<Scenes.SceneContext>('editStartTime');
         const editEndTimeScene = new Scenes.BaseScene<Scenes.SceneContext>('editEndTime');
+        const submitFormScene = new Scenes.BaseScene<Scenes.SceneContext>('submitForm');
 
         this.stage = new Scenes.Stage<Scenes.SceneContext>([formInitialScene,
                                                             userInfoScene,
@@ -53,7 +55,10 @@ export class FormStageCreator {
                                                             editCertifiedPaddlersScene,
                                                             editNonCertifiedPaddlersScene,
                                                             editStartTimeScene,
-                                                            editEndTimeScene]);
+                                                            editEndTimeScene,
+                                                            submitFormScene],{ 
+                                                                ttl: 60
+                                                            });
 
         // formInitialScene
         formInitialScene.enter((ctx) => {
@@ -118,6 +123,7 @@ export class FormStageCreator {
             ctx.reply('Submitting form...');
             // TODO: logic for submitting form here
             // TODO: handle failed form submission
+            ctx.scene.enter('submitForm')
             ctx.reply('Form successfully submitted!')
 
             // empty out the currentFormDetails
@@ -205,5 +211,23 @@ export class FormStageCreator {
             currentFormDetails.endTime = message
             return ctx.scene.enter('formInit');
         })
-    }
+
+        //submitFormScene
+        submitFormScene.enter((ctx) => {
+            const FillFormInstance: FillForm = new FillForm();
+            if (!FillFormInstance.submitForm(
+                currentFormDetails.user.name, 
+                currentFormDetails.user.hp, 
+                currentFormDetails.certifiedPaddlers, 
+                currentFormDetails.nonCertifiedPaddlers,
+                currentFormDetails.startTime,
+                currentFormDetails.endTime
+                )){
+                ctx.reply('Form submitted!');
+            }
+            else {
+                ctx.reply('Submission failed...');
+            }
+        })
+    } 
 }
