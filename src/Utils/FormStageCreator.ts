@@ -15,8 +15,6 @@ export class FormStageCreator {
         await this.CertifiedPaddlerCounter.getOneStarZeroStarCount().then((res) => {
             const oneStar = res[0];
             const zeroStar = res[1];
-            console.log(oneStar);
-            console.log(zeroStar);
             this.populateCurrentForm(oneStar, zeroStar, '07:00', '09:00');
         })
     }
@@ -124,10 +122,9 @@ export class FormStageCreator {
             // TODO: logic for submitting form here
             // TODO: handle failed form submission
             ctx.scene.enter('submitForm')
-            ctx.reply('Form successfully submitted!')
-
             // empty out the currentFormDetails
             currentFormDetails = new FormDetails();
+            
 
             return ctx.scene.leave();
         })
@@ -215,11 +212,17 @@ export class FormStageCreator {
         //submitFormScene
         submitFormScene.enter((ctx) => {
             const FillFormInstance: FillForm = new FillForm();
+            console.log(currentFormDetails.user.name);
+            console.log(currentFormDetails.user.hp);
+            console.log(currentFormDetails.certifiedPaddlers);
+            console.log(currentFormDetails.nonCertifiedPaddlers);
+            console.log(currentFormDetails.startTime);
+            console.log(currentFormDetails.endTime);
             if (!FillFormInstance.submitForm(
                 currentFormDetails.user.name, 
                 currentFormDetails.user.hp, 
-                currentFormDetails.certifiedPaddlers, 
-                currentFormDetails.nonCertifiedPaddlers,
+                String(currentFormDetails.certifiedPaddlers), 
+                String(currentFormDetails.nonCertifiedPaddlers),
                 currentFormDetails.startTime,
                 currentFormDetails.endTime
                 )){
