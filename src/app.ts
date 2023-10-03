@@ -8,7 +8,10 @@ import {greet} from './Commands/greetings';
 import {HELP_MESSAGE} from './Commands/CommandConstants';
 import {DispBoatAllocCommand} from './Commands/dispBoatAllocCommand'
 import { GenMonthlyAttendanceCommand } from './Commands/GenMonthlyAttendanceCommand';
-import { FillForm } from './Commands/TestForm';
+import { CertifiedPaddlerCounter } from './Commands/CertifiedPaddlerCounter';
+import { FillForm } from './Commands/TestForm'; // still testing!
+import { FormStageCreator } from './Utils/FormStageCreator';
+import { FormDetails } from './Utils/FormDetails';
 
 /* Load environment variables */
 require('dotenv').config();
@@ -27,68 +30,21 @@ const googleDriveInstance: drive_v3.Drive = google.drive({version:"v3", auth: au
 /* Initialize command objects */
 const dispBoatAllocCommand: DispBoatAllocCommand = new DispBoatAllocCommand(googleSheetInstance);
 const genMonthlyAttendanceCommand: GenMonthlyAttendanceCommand = new GenMonthlyAttendanceCommand(googleSheetInstance, googleDriveInstance);
+const getDailyAttendanceCommand: CertifiedPaddlerCounter = new CertifiedPaddlerCounter(googleSheetInstance);
 
 /* Initialize Telegram Bot */
 const APIToken: string = (environment == 'prod' ? process.env.PROD_BOT_TOKEN : process.env.TEST_BOT_TOKEN) as string;
 
 /* Initialise scene for form */
-const { enter, leave } = Scenes.Stage;
-const formScene = new Scenes.BaseScene<Scenes.SceneContext>('fillform');
+let userIdToUser = new Map();
+let currentFormDetails = new FormDetails();
+const formStageCreator: FormStageCreator = new FormStageCreator(userIdToUser, currentFormDetails, getDailyAttendanceCommand);
 
 const fillFormInstance: FillForm = new FillForm();
 
-formScene.enter((ctx) => {
-    ctx.reply('Enter details (Use /help to see what is required)');
-})
-
-formScene.on("text", async (ctx) => {
-    const userInput = ctx.message.text;
-    const values = userInput.split('\n').map(value => value.trim());
-    if (values.length !== 5) {
-        ctx.reply('Ensure that you have entered all details (5 in total).');
-        return;
-    }
-    const [name, hp, onestar, zerostar, timeOfDay] = values;
-    if (!name || !hp || !onestar || !zerostar || !timeOfDay) {
-        ctx.reply('Invalid input. Please check your values.');
-        ctx.scene.enter('fillform');
-        return;
-    }
-    const cleanedHp = hp.replace(/\s/g, '');
-    const cleanedOnestar = onestar.replace(/\s/g, '');
-    const cleanedZerostar = zerostar.replace(/\s/g, '');
-    const cleanedTimeOfDay = timeOfDay.replace(/\s/g, '');
-    if (!(/^[\d]+$/.test(cleanedHp)) ||
-        !(/^[\d]+$/.test(cleanedOnestar)) ||
-        !(/^[\d]+$/.test(cleanedZerostar)) ||
-        !(/^[a-zA-Z]+$/.test(timeOfDay))) {
-    ctx.reply('Check your input please. Only have numbers where numbers are allowed!');
-    ctx.scene.enter('fillform');
-    return;
-    }
-    let startTime, endTime;
-
-    if (cleanedTimeOfDay.toLowerCase() === 'morning') {
-        startTime = '07:30';
-        endTime = '10:00';
-    } else if (cleanedTimeOfDay.toLowerCase() === 'afternoon'){
-        startTime = '16:00';
-        endTime = '18:00';
-    } else {
-        ctx.reply('Please enter a correct time!');
-        ctx.scene.enter('fillform');
-        return;
-    }
-    fillFormInstance.submitForm(name, cleanedHp, cleanedOnestar, cleanedZerostar, startTime, endTime);
-    ctx.reply('Form submitted!');
-    ctx.scene.leave();
-});
-
 /* Initializing stage + bot */
 const bot = new Telegraf<Scenes.SceneContext>(APIToken);
-const stage = new Scenes.Stage<Scenes.SceneContext>([formScene], {
-    ttl: 30,
-});
+const stage = formStageCreator.stage;
 bot.use(session());
 bot.use(stage.middleware());
 
@@ -104,7 +60,7 @@ bot.command("genAttendance", (ctx) => {genMonthlyAttendanceCommand.generateAtten
     .catch((e) => {console.error(e)})
 });
 bot.command("form", (ctx) => { 
-    ctx.scene.enter("fillform");
+    ctx.scene.enter("formInit");
 });
 
 console.log("Launching Telegram bot");

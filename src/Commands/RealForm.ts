@@ -18,18 +18,17 @@ export class FillForm {
 
 		const [startHour, startMinute] = startTime.split(':');
 		const [endHour, endMinute] = endTime.split(':');
-		// Testing Form used, not real form. Feel free to spam. 
-		const response = await fetch('https://docs.google.com/forms/d/e/1FAIpQLScPuxvh-x25U_IUiDQDxEvClXKEtVz9zTNmGtoWDgxk95R_fA/formResponse', {
+		// REAL FORM URL USED!!!
+		const response = await fetch('https://docs.google.com/forms/d/e/1FAIpQLSfMtt0kvol72F9A2BaLJacr8Xzm9n51KBxVfS8YkDe8SfS5GA/viewform', {
 		  method: 'POST',
-		  body: `entry.1661917649=${encoded_name}&entry.18740119=${hp}&entry.903605068=NUS&entry.202460231=${oneStar}&entry.1867953654=${zeroStar}&entry.476828904_hour=${startHour}&entry.476828904_minute=${startMinute}&entry.1889441574_hour=${endHour}&entry.1889441574_minute=${endMinute}&entry.698202065_year=${currentYear}&entry.698202065_month=${currentMonth}&entry.698202065_day=${currentDay}&entry.1757175466=Co-Curricular+Activities+%28CCA%29&entry.1030466242=The+Paddle+Lodge+%40+MacRitchie+Reservoir&entry.879462990=I+read+and+agree+to+the+disclaimer+note.`,
+		  body: `entry.650249987=${encoded_name}&entry.159891337=${hp}&entry.1940228710=NUS&entry.1522705696=${oneStar}&entry.923232455=${zeroStar}&entry.76258493_hour=${startHour}&entry.76258493_minute=${startMinute}&entry.1960199521_hour=${endHour}&entry.1960199521_minute=${endMinute}&entry.2082654990_year=${currentYear}&entry.2082654990_month=${currentMonth}&entry.2082654990_day=${currentDay}&entry.1965888248=Co-Curricular+Activities+%28CCA%29&entry.1917318237=The+Paddle+Lodge+%40+MacRitchie+Reservoir&entry.1234664796=I+read+and+agree+to+the+disclaimer+note.`,
 		  headers: {
 		    'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101 Firefox/91.0',
 		    'Content-Type': 'application/x-www-form-urlencoded',
 		    'Origin': 'https://docs.google.com',
-		    'Referer': 'https://docs.google.com/forms/d/e/1FAIpQLScPuxvh-x25U_IUiDQDxEvClXKEtVz9zTNmGtoWDgxk95R_fA/viewform',
+		    'Referer': 'https://docs.google.com/forms/d/e/1FAIpQLSfMtt0kvol72F9A2BaLJacr8Xzm9n51KBxVfS8YkDe8SfS5GA/viewform',
 		  }
 		});
-
 		const html = await response.text();
 
 		if (!response.ok || !html.includes('Your response has been recorded')){
