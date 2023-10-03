@@ -218,19 +218,16 @@ export class FormStageCreator {
             console.log(currentFormDetails.nonCertifiedPaddlers);
             console.log(currentFormDetails.startTime);
             console.log(currentFormDetails.endTime);
-            if (!FillFormInstance.submitForm(
+
+            FillFormInstance.submitForm (
                 currentFormDetails.user.name, 
                 currentFormDetails.user.hp, 
                 String(currentFormDetails.certifiedPaddlers), 
                 String(currentFormDetails.nonCertifiedPaddlers),
                 currentFormDetails.startTime,
-                currentFormDetails.endTime
-                )){
-                ctx.reply('Form submitted!');
-            }
-            else {
-                ctx.reply('Submission failed...');
-            }
+                currentFormDetails.endTime);
+            
+            ctx.reply('Form submitted!');
         })
     } 
 }
