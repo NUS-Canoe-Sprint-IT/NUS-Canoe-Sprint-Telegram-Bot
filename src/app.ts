@@ -43,8 +43,7 @@ const formStageCreator: FormStageCreator = new FormStageCreator(userIdToUser, cu
 const fillFormInstance: FillForm = new FillForm();
 
 /* Initializing stage + bot */
-//const bot = new Telegraf<Scenes.SceneContext>(APIToken);
-const bot = new Telegraf<Scenes.SceneContext>('5954441458:AAF9ZrWunkgnj9ZUS0yrK6cM7JpS1Q60pd4');
+const bot = new Telegraf<Scenes.SceneContext>(APIToken);
 const stage = formStageCreator.stage;
 bot.use(session());
 bot.use(stage.middleware());
