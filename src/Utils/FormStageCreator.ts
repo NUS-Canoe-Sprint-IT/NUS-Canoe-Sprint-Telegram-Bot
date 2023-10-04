@@ -120,7 +120,6 @@ export class FormStageCreator {
             ctx.reply('Submitting form...');
             // TODO: logic for submitting form here
             // TODO: handle failed form submission
-            const FillFormInstance: FillForm = new FillForm();
             console.log(currentFormDetails.user.name);
             console.log(currentFormDetails.user.hp);
             console.log(currentFormDetails.certifiedPaddlers);
