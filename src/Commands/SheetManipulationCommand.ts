@@ -24,6 +24,4 @@ export class SheetManipulationCommand {
         })
         return sheet.data.values as string[][]
     }
-    
-
 }

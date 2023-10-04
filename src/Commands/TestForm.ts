@@ -33,8 +33,7 @@ export class FillForm {
 		const html = await response.text();
 
 		if (!response.ok || !html.includes('Your response has been recorded')){
-			return false;
+			throw new Error(`Failed to submit form. Response: ${html}`);
 		}
-		return true;
 	} 
 }

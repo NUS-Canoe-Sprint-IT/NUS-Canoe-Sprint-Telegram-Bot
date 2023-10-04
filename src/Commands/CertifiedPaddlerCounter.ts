@@ -1,6 +1,4 @@
 import * as dateUtils from "../Utils/dateUtils"
-import { zipNameAndBoatAlloc } from "../Utils/googleSheetsUtils"
-import {DATA_RANGE_MORN, DATA_RANGE_AFTN} from "./CommandConstants"
 import {SheetManipulationCommand} from "./SheetManipulationCommand"
 
 export class CertifiedPaddlerCounter extends SheetManipulationCommand {
@@ -12,7 +10,8 @@ export class CertifiedPaddlerCounter extends SheetManipulationCommand {
         var dateToNameList: {[key:string]: string[]} = {}
         for (let i = 0; i < 7; i++) {
             const date: string = data[i * 3][0]
-            const names: string[] = data[i * 3].splice(1)
+            let names: string[] = data[i * 3].splice(1)
+            names = names.filter((name) => {return name != 'Name' && name != ''});
             dateToNameList[date] = names
         }
         return dateToNameList
@@ -52,18 +51,19 @@ export class CertifiedPaddlerCounter extends SheetManipulationCommand {
     public async getOneStarZeroStarCount(): Promise<number[]> {
         const today: Date = new Date();
         const thisWeek: string = dateUtils.getWeekFromDate(today);
-        const isAM: Boolean = (today.getHours() <= 12) ;
+        const isAM: Boolean = (today.getHours() <= 12);
         const currentWeekAttendanceRaw: string[][] = await this.getWeeklyAttendanceOn(thisWeek , isAM);
         const currentWeekAttendanceParsed: {[key: string]: string[]} = this.parseDailyNameList(currentWeekAttendanceRaw)
         const todaysNameList: string[] = currentWeekAttendanceParsed[dateUtils.dateToString(today)];
         const nicknameToOneStar: Map<string, boolean> = await this.getNicknameToOneStar();
 
         let numCertified: number = 0;
-        for (var name in todaysNameList) {
+        todaysNameList.forEach((name) => {
             if (nicknameToOneStar.has(name) && nicknameToOneStar.get(name)) {
                 numCertified += 1;
             }
-        }
+        });
+
         const numUncertified = todaysNameList.length - numCertified;
         return [numCertified, numUncertified]
     }

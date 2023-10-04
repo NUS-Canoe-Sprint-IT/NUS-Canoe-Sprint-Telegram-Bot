@@ -30,7 +30,7 @@ const googleDriveInstance: drive_v3.Drive = google.drive({version:"v3", auth: au
 /* Initialize command objects */
 const dispBoatAllocCommand: DispBoatAllocCommand = new DispBoatAllocCommand(googleSheetInstance);
 const genMonthlyAttendanceCommand: GenMonthlyAttendanceCommand = new GenMonthlyAttendanceCommand(googleSheetInstance, googleDriveInstance);
-const getDailyAttendanceCommand: CertifiedPaddlerCounter = new CertifiedPaddlerCounter(googleSheetInstance);
+const certifiedPaddlerCounter: CertifiedPaddlerCounter = new CertifiedPaddlerCounter(googleSheetInstance);
 
 /* Initialize Telegram Bot */
 const APIToken: string = (environment == 'prod' ? process.env.PROD_BOT_TOKEN : process.env.TEST_BOT_TOKEN) as string;
@@ -38,9 +38,7 @@ const APIToken: string = (environment == 'prod' ? process.env.PROD_BOT_TOKEN : p
 /* Initialise scene for form */
 let userIdToUser = new Map();
 let currentFormDetails = new FormDetails();
-const formStageCreator: FormStageCreator = new FormStageCreator(userIdToUser, currentFormDetails, getDailyAttendanceCommand);
-
-const fillFormInstance: FillForm = new FillForm();
+const formStageCreator: FormStageCreator = new FormStageCreator(userIdToUser, currentFormDetails, certifiedPaddlerCounter);
 
 /* Initializing stage + bot */
 const bot = new Telegraf<Scenes.SceneContext>(APIToken);
