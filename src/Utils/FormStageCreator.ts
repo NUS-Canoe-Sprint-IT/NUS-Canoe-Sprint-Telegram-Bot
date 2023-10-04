@@ -118,20 +118,15 @@ export class FormStageCreator {
 
         formConfirmationScene.action('confirm', async (ctx) => {
             ctx.reply('Submitting form...');
-            // TODO: logic for submitting form here
-            // TODO: handle failed form submission
-            console.log(currentFormDetails.user.name);
-            console.log(currentFormDetails.user.hp);
-            console.log(currentFormDetails.certifiedPaddlers);
-            console.log(currentFormDetails.nonCertifiedPaddlers);
-            console.log(currentFormDetails.startTime);
-            console.log(currentFormDetails.endTime);
+            const FillFormInstance: FillForm = new FillForm();
+
+            // submit form, check for errors
             try {
                 const result = await FillFormInstance.submitForm ( 
                 currentFormDetails.user.name, 
                 currentFormDetails.user.hp, 
-                String(currentFormDetails.certifiedPaddlers), 
-                String(currentFormDetails.nonCertifiedPaddlers),
+                currentFormDetails.certifiedPaddlers, 
+                currentFormDetails.nonCertifiedPaddlers,
                 currentFormDetails.startTime,
                 currentFormDetails.endTime
                 );
@@ -139,12 +134,12 @@ export class FormStageCreator {
             } catch (error) {
                 ctx.reply('Failed. Try again.');
             }
-            
 
             // empty out the currentFormDetails
             currentFormDetails = new FormDetails();
-            currentFormDetails.endTime = '09:00';
-            currentFormDetails.startTime = '07:00';
+
+            /* TODO: Need to call autoPopulateCurrentForm() here. */
+            
             return ctx.scene.leave();
         })
 
