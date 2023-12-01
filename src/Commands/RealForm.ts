@@ -17,9 +17,10 @@ export class FillForm {
 		const [startHour, startMinute] = startTime.split(':');
 		const [endHour, endMinute] = endTime.split(':');
 		
-		const response = await fetch('https://docs.google.com/forms/d/e/1FAIpQLSfMtt0kvol72F9A2BaLJacr8Xzm9n51KBxVfS8YkDe8SfS5GA/formResponse', {
+		const response = await fetch('https://docs.google.com/forms/d/e/1FAIpQLSe9KO-YM_0llYvOS5gN5OwpWl0Q4MrJGDh1MhC5iGeG_nizxw/formResponse', {
 		  method: 'POST',
-		  body: `entry.650249987=${encoded_name}&entry.159891337=${hp}&entry.1940228710=NUS&entry.1522705696=${oneStar}&entry.923232455=${zeroStar}&entry.76258493_hour=${startHour}&entry.76258493_minute=${startMinute}&entry.1960199521_hour=${endHour}&entry.1960199521_minute=${endMinute}&entry.2082654990_year=${currentYear}&entry.2082654990_month=${currentMonth}&entry.2082654990_day=${currentDay}&entry.1965888248=Co-Curricular+Activities+%28CCA%29&entry.1917318237=The+Paddle+Lodge+%40+MacRitchie+Reservoir&entry.1234664796=I+read+and+agree+to+the+disclaimer+note.`,
+		  
+		  body: `entry.566172969=${encoded_name}&entry.1131253205=${hp}&entry.1893945818=NUS&entry.1621193565=${oneStar}&entry.1615606228=${zeroStar}&entry.1570249508_hour=${startHour}&entry.1570249508_minute=${startMinute}&entry.1447783740_hour=${endHour}&entry.1447783740_minute=${endMinute}&entry.862261437_year=${currentYear}&entry.862261437_month=${currentMonth}&entry.862261437_day=${currentDay}&entry.238192318=Co-Curricular+Activities+%28CCA%29&entry.1834008456=The+Paddle+Lodge+%40+MacRitchie+Reservoir&entry.396587464=I+have+read+and+agree+to+the+disclaimer+note.`,
 		  headers: {
 		    'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101 Firefox/91.0',
 		    'Content-Type': 'application/x-www-form-urlencoded',
