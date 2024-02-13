@@ -19,7 +19,6 @@ export class FillForm {
 		
 		const response = await fetch('https://docs.google.com/forms/d/e/1FAIpQLSe9KO-YM_0llYvOS5gN5OwpWl0Q4MrJGDh1MhC5iGeG_nizxw/formResponse', {
 		  method: 'POST',
-		  
 		  body: `entry.566172969=${encoded_name}&entry.1131253205=${hp}&entry.1893945818=NUS&entry.1621193565=${oneStar}&entry.1615606228=${zeroStar}&entry.1570249508_hour=${startHour}&entry.1570249508_minute=${startMinute}&entry.1447783740_hour=${endHour}&entry.1447783740_minute=${endMinute}&entry.862261437_year=${currentYear}&entry.862261437_month=${currentMonth}&entry.862261437_day=${currentDay}&entry.238192318=Co-Curricular+Activities+%28CCA%29&entry.1834008456=The+Paddle+Lodge+%40+MacRitchie+Reservoir&entry.396587464=I+have+read+and+agree+to+the+disclaimer+note.`,
 		  headers: {
 		    'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101 Firefox/91.0',

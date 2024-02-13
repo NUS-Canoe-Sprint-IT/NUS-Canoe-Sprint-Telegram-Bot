@@ -1,4 +1,4 @@
-const fetch = require("node-fetch-commonjs")
+esconst fetch = require("node-fetch-commonjs")
 
 export class FillForm {
 	public async submitForm(
