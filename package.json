@@ -38,6 +38,7 @@
   },
   "dependencies": {
     "danfojs-node": "^1.1.2",
-    "node-fetch-commonjs": "^3.3.1"
+    "node-fetch-commonjs": "^3.3.1",
+    "typegram": "^5.2.0"
   }
 }
